@@ -31,26 +31,33 @@ const showImages = images => {
 }
 
 const getImages = (query) => {
+  toggleSpinner(true);
   fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
-    .then(response => response.json())
-    .then(data => showImages(data.hits))
-    .catch(err => console.log(err))
-}
+  .then((response) => response.json())
+  .then((data) => {
+    showImages(data.hits);
+    toggleSpinner(false);
+  })
+  .catch((err) => console.log(err));
+};
 
 
 let slideIndex = 0;
 const selectItem = (event, img) => {
   let element = event.target;
-  element.classList.add('added');
+  
  
   let item = sliders.indexOf(img);
   if (item === -1) {
+    element.classList.add('added');
     sliders.push(img);
   }
    else {
-    // alert('Hey, Already added !')
-    var selectImg = document.getElementById("mySelect");
-    selectImg.remove(selectImg.selectedIndex);
+    element.classList.remove("added");
+    sliders.splice(item, 1);
+    // // alert('Hey, Already added !')
+    // var selectImg = document.getElementById("mySelect");
+    // selectImg.remove(selectImg.selectedIndex);
   }
 }
 
@@ -85,17 +92,16 @@ const createSlider = () => {
   })
   changeSlide(0)
 
-    if (duration >= 1000){
+    // if (duration >= 1000){
       timer = setInterval(function () {
     slideIndex++;
     changeSlide(slideIndex);
-  }, duration);
-    }
-    else{
-      alert(`Oiii i won't work if you give Negative value, you've to slide it manually`)
-    }
-  
-}
+  }, duration > 0 ? duration : 1000);
+    };
+    // else{
+    //   alert(`Oiii i won't work if you give nagetive value, you've to slide it manually`)
+    // }
+
 
 // change slider index 
 const changeItem = index => {
@@ -142,13 +148,15 @@ searchInput.addEventListener("keypress", function(event){
     searchBtnn.click()
 });
 
-// const toggleSpinner = (show) =>{
-//   const spinner = document.getElementById("spinner");
-//   if(show){
-//     spinner.classList.remove('d-none');
-//   }
-//   else{
-//     spinner.classList.add('d-none');
-//   }
+
+// extra work 
+const toggleSpinner = (show) =>{
+  const spinner = document.getElementById("spinner");
+  if(show){
+    spinner.classList.remove('d-none');
+  }
+  else{
+    spinner.classList.add('d-none');
+  }
   
-// }
+}
